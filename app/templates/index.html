@@ -1,16 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kekambas Blog</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %} Home {% endblock %}
+
+{% block content %}
+
     <h1>Hello {{name}} from the index template!</h1>
     <h4>{{ 10 + 5 }}</h4>
 
     {{fruits}}
+
+    I love {{fruits[5]}}!
     <h4>My favorite fruits are:</h4>
     <ul>
         {% for f in fruits%}
@@ -22,5 +21,4 @@
         {% endfor %}
     </ul>
 
-</body>
-</html>
+{% endblock content%}
