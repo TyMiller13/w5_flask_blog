@@ -1,5 +1,4 @@
 #Import the Flask Class from the Flask module -- will be main object
-
 from flask import Flask
 #Import SQLAlchemy and Migrate from their modules
 from flask_sqlalchemy import SQLAlchemy
@@ -19,4 +18,4 @@ migrate = Migrate(app, db)
 
 
 #import all of the routes from the routes file into the current folder
-from . import routes
+from . import routes, models
