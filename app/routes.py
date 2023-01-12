@@ -72,3 +72,7 @@ def logout():
     logout_user()
     flash(f"You have been logged out", "warning")
     return redirect(url_for('index'))
+
+# @app.route('/posts')
+# def posts():
+#     pass
