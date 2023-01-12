@@ -20,6 +20,9 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f"<User {self.id} | {self.username}>"
 
+    def check_password(self, password_guess):
+        return check_password_hash(self.password, password_guess)
+
 @login.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
