@@ -10,7 +10,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(50), nullable=False, unique=True)
     password = db.Column(db.String(256), nullable=False)
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    posts = db.relationship('Posts', backref = 'author', lazy = 'dynamic')
+    posts = db.relationship('Post', backref = 'author', lazy = 'dynamic')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -28,7 +28,7 @@ class User(db.Model, UserMixin):
 def load_user(user_id):
     return User.query.get(user_id)
 
-class Posts(db.Model):
+class Post(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     title = db.Column(db.String, nullable = False)
     body = db.Column(db.String, nullable = False)
@@ -42,3 +42,18 @@ class Posts(db.Model):
 
     def __repr__(self):
         return f"<Post {self.id} | {self.title}>"
+
+
+    def update(self, **kwargs):
+        # for each keyvalue that comes in as a keyword
+        for key,value in kwargs.items():
+            # if the key is an acceptable
+            if key in {'title','body'}:
+                #set that attribute on the instance e.g. post.title = 'Updated Title'
+                setattr(self,key,value)
+        # save the updates to the database
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
