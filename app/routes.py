@@ -11,7 +11,6 @@ def index():
     return render_template('index.html', posts=posts)
 
 
-
 @app.route('/signup', methods=["GET", "POST"])
 def signup():
     # create an instance of the SignUpForm
@@ -86,6 +85,7 @@ def create_post():
         return redirect(url_for('index'))
     return render_template('create.html', form=form)
 
+
 @app.route('/posts/<int:post_id>')
 def get_post(post_id):
     # post = Posts.query.get_or_404(post_id)
@@ -96,7 +96,6 @@ def get_post(post_id):
     return render_template('post.html', post=post)
 
 
-
 @app.route('/posts/<post_id>/edit', methods=["GET", "POST"])
 @login_required
 def edit_post(post_id):
@@ -104,7 +103,7 @@ def edit_post(post_id):
     if not post:
         flash(f"A post with id {post_id} does not exist", "danger")
         return redirect(url_for('index'))
-        #make sure post author is the current user
+        # make sure post author is the current user
     if post.author != current_user:
         flash(f"You do not have permission to edit this post", "danger")
         return redirect(url_for('index'))
@@ -113,14 +112,14 @@ def edit_post(post_id):
         # get the form data
         title = form.title.data
         body = form.body.data
-        #update the post using .update method
+        # update the post using .update method
         post.update(title=title, body=body)
-        flash(f"{post.title} has been updated!","success")
+        flash(f"{post.title} has been updated!", "success")
         return redirect(url_for('get_post', post_id=post.id))
     if request.method == 'GET':
         form.title.data = post.title
         form.body.data = post.body
-    return render_template('edit_post.html', post=post , form=form)
+    return render_template('edit_post.html', post=post, form=form)
 
 
 @app.route('/posts/<post_id>/delete')
@@ -130,7 +129,7 @@ def delete_post(post_id):
     if not post:
         flash(f"A post with id {post_id} does not exist", "danger")
         return redirect(url_for('index'))
-        #make sure post author is the current user
+        # make sure post author is the current user
     if post.author != current_user:
         flash(f"You do not have permission to delete this post", "danger")
         return redirect(url_for('index'))
