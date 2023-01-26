@@ -29,9 +29,8 @@ class User(db.Model, UserMixin):
             'id':self.id,
             'email':self.email,
             'username':self.username,
-            'password':self.password,
             'date_created':self.date_created,
-            'posts':self.posts
+            # 'posts':[p.to_dict() for p in self.posts.all()]
         }
 
 @login.user_loader

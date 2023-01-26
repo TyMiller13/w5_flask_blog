@@ -43,16 +43,16 @@ def create_post():
     return new_post.to_dict(), 201
 
 
-    #Endpoint to get existing users
-@api.route('/users/<int:user_id>', methods=['GET'])
+    #Endpoint to get existing user by id
+@api.route('/users/<int:user_id>')
 def get_user(user_id):
     user = User.query.get_or_404(user_id)
     return user.to_dict()
     
     
     #Endpoint to create new user
-@api.route('/signup', methods=["GET", "POST"])
-def signup():
+@api.route('/users', methods=["POST"])
+def create_user():
     #check to see that the request sent a request body that is json
     if not request.is_json:
         return {'error': 'Your request content-type must be application/json'}, 400
@@ -63,13 +63,17 @@ def signup():
         #If the field is not in the request body; throw an error saying they are missing that field
         if field not in data:
             return {'error': f"{field} must be in request body"}, 400
-
-    #Pull the fields from the request data
+    #Pull individual values from the request body
     email = data.get('email')
     username = data.get('username')
     password = data.get('password')
-
-    #Create new post instance with data from request
+    # Check to see if there are current userss withe that username /or email
+    existing_user = User.query.filter((User.username == username)|(User.email == email)).all()
+    if existing_user:
+        return {'error': 'User with this username /or email already exists'}, 400
+    #Create new User instance with data from request
     new_user = User(email=email, username=username, password=password)
-    #return the new post as a JSON response
-    return new_user.to_dict(), 200
+    #return the new user as a JSON response
+    return new_user.to_dict(), 201
+    
+    
