@@ -1,6 +1,6 @@
 from flask import request
 from . import api;
-from app.models import Post
+from app.models import Post, User
 
 @api.route('/')
 def index():
@@ -27,17 +27,49 @@ def create_post():
     # Get the data from the request body
     data = request.json
     # Validate the incoming data
-    for field in ['title', 'body', 'user_id']:
+    for field in ['email', 'body', 'user_id']:
         #If the field is not in the request body; throw an error saying they are missing that field
         if field not in data:
             return {'error': f"{field} must be in request body"}, 400
 
     #Pull the fields from the request data
-    title = data.get('title')
+    email = data.get('email')
     body = data.get('body')
     user_id = data.get('user_id')
 
     #Create new post instance with data from request
-    new_post = Post(title=title, body=body, user_id=user_id)
+    new_post = Post(email=email, body=body, user_id=user_id)
     #return the new post as a JSON response
     return new_post.to_dict(), 201
+
+
+    #Endpoint to get existing users
+@api.route('/users/<int:user_id>', methods=['GET'])
+def get_user(user_id):
+    user = User.query.get_or_404(user_id)
+    return user.to_dict()
+    
+    
+    #Endpoint to create new user
+@api.route('/signup', methods=["GET", "POST"])
+def signup():
+    #check to see that the request sent a request body that is json
+    if not request.is_json:
+        return {'error': 'Your request content-type must be application/json'}, 400
+    # Get the data from the request body
+    data = request.json
+    # Validate the incoming data
+    for field in ['email', 'username', 'password']:
+        #If the field is not in the request body; throw an error saying they are missing that field
+        if field not in data:
+            return {'error': f"{field} must be in request body"}, 400
+
+    #Pull the fields from the request data
+    email = data.get('email')
+    username = data.get('username')
+    password = data.get('password')
+
+    #Create new post instance with data from request
+    new_user = User(email=email, username=username, password=password)
+    #return the new post as a JSON response
+    return new_user.to_dict(), 200
